@@ -29,14 +29,45 @@ module.exports = function(app, db) {
     });
   });
 
+  app.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+    try {
+      db.collection('users').deleteOne({ _id: ObjectId(id) }, (err, obj) => {
+        if (err) throw err;
+        res.send('ok');
+      });
+    } catch (e) {
+      throw e;
+    }
+  });
+
+  app.delete('/users', (req, res) => {
+    console.log('delete');
+
+    const schema = yup.object().shape({
+      ids: yup.array(yup.string()).required(),
+    });
+
+    schema.isValid(req.body).then(valid => {
+      try {
+        const details = { _id: { $in: req.body.ids.map(id => ObjectId(id)) } };
+        db.collection('users').deleteMany(details, (err, obj) => {
+          if (err) throw err;
+          res.send('ok');
+        });
+      } catch (e) {
+        throw e;
+      }
+    });
+  });
+
   app.post('/users', (req, res) => {
     const schema = yup.object().shape({
       firstName: yup.string().required(),
       lastName: yup.string().required(),
+      address: yup.string().required(),
     });
     schema.isValid(req.body).then(valid => {
-      console.log(req.body);
-      console.log(valid);
       if (valid) {
         db.collection('users').insertOne(
           { ...req.body, createdOn: new Date() },
