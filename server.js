@@ -1,8 +1,8 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
+const db = require('./config/db');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const db = require('./config/db');
 const methodOverride = require('method-override');
 
 dotenv.config();

@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "seed:users": "node ./scripts/seedUsers.js"
   },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "faker": "^4.1.0",
     "method-override": "^3.0.0",
     "mongodb": "^3.1.13",
     "yup": "^0.26.10"
