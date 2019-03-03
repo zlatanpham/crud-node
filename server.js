@@ -1,9 +1,10 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
-const db = require('./config/db');
+const dbConfig = require('./config/db');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const methodOverride = require('method-override');
+const mongoose = require('mongoose');
 
 dotenv.config();
 
@@ -41,13 +42,45 @@ app.use(function(req, res, next) {
 
 const port = 8000;
 
-MongoClient.connect(db.url, { useNewUrlParser: true }, (err, database) => {
-  if (err) return console.log(err);
+var users = require('./app/routes/user_routes');
 
-  // Make sure you add the database name and not the collection name
-  dtb = database.db('local');
-  require('./app/routes')(app, dtb);
-  app.listen(port, () => {
-    console.log('We are live on ' + port);
-  });
-});
+app.use('/users', users);
+
+mongoose
+  .connect(dbConfig.url, { useNewUrlParser: true })
+  .then(() => {
+    // db = database.db('local');
+    // require('./app/routes')(app);
+
+    app.listen(port, () => {
+      console.log('We are live on ' + port);
+    });
+  })
+  .catch(err => console.error(err));
+
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function() {
+//   // we're connected!
+//     // db = database.db('local');
+//     // require('./app/routes')(app, db);
+//     app.listen(port, () => {
+//       console.log('We are live on ' + port);
+//     });
+//   },
+// });
+
+// MongoClient.connect(
+//   dbConfig.url,
+//   { useNewUrlParser: true },
+//   (err, database) => {
+//     if (err) return console.log(err);
+
+//     // Make sure you add the database name and not the collection name
+//     db = database.db('local');
+//     require('./app/routes')(app, db);
+//     app.listen(port, () => {
+//       console.log('We are live on ' + port);
+//     });
+//   },
+// );
