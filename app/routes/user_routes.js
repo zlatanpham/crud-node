@@ -1,9 +1,8 @@
 const yup = require('yup');
-const ObjectId = require('mongodb').ObjectId;
 const mongoose = require('mongoose');
 const User = require('../model/User');
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
 
 router.get('/', function(req, res, next) {
   User.find(function(err, users) {

@@ -42,45 +42,19 @@ app.use(function(req, res, next) {
 
 const port = 8000;
 
-var users = require('./app/routes/user_routes');
+const users = require('./app/routes/user_routes');
+const inventory = require('./app/routes/inventory_routes');
 
 app.use('/users', users);
+app.use('/inventory', inventory);
 
 mongoose
   .connect(dbConfig.url, { useNewUrlParser: true })
   .then(() => {
     // db = database.db('local');
     // require('./app/routes')(app);
-
     app.listen(port, () => {
       console.log('We are live on ' + port);
     });
   })
   .catch(err => console.error(err));
-
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function() {
-//   // we're connected!
-//     // db = database.db('local');
-//     // require('./app/routes')(app, db);
-//     app.listen(port, () => {
-//       console.log('We are live on ' + port);
-//     });
-//   },
-// });
-
-// MongoClient.connect(
-//   dbConfig.url,
-//   { useNewUrlParser: true },
-//   (err, database) => {
-//     if (err) return console.log(err);
-
-//     // Make sure you add the database name and not the collection name
-//     db = database.db('local');
-//     require('./app/routes')(app, db);
-//     app.listen(port, () => {
-//       console.log('We are live on ' + port);
-//     });
-//   },
-// );
