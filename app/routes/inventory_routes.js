@@ -17,7 +17,6 @@ router.post('/', (req, res, next) => {
     desc: yup.string().required(),
     memo: yup.string().required(),
     vendor: yup.string().required(),
-    date: yup.string().required(),
     paidBy: yup.string().required(),
   });
   schema.isValid(req.body).then(valid => {
@@ -36,39 +35,21 @@ router.post('/', (req, res, next) => {
   });
 });
 
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params;
+  console.log(id);
+  Inventory.findByIdAndDelete(id, err => {
+    if (err) return next(err);
+    res.send(`delete inventory _id: ${id}`);
+  });
+});
+
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  Inventory.findById(id, (err, inventory) => {
+    if (err) return next(err);
+    res.json(inventory);
+  });
+});
+
 module.exports = router;
-
-// router.get('/:id', (req, res, next) => {
-//   const { id } = req.params;
-//   Inventory.findById(id, (err, Inventory) => {
-//     if (err) return next(err);
-//     res.json(Inventory);
-//   });
-// });
-
-// router.delete('/:id', (req, res, next) => {
-//   const { id } = req.params;
-//   Inventory.findByIdAndDelete(id, err => {
-//     if (err) next(err);
-//     console.log(id);
-//     res.send('ok');
-//   });
-// });
-
-// router.post('/deletes', (req, res) => {
-//   const schema = yup.object().shape({
-//     ids: yup.array(yup.string()).required(),
-//   });
-
-//   schema.isValid(req.body).then(valid => {
-//     if (valid) {
-//       Inventory.deleteMany({ _id: { $in: req.body.ids } }, (err, result) => {
-//         if (err) throw err;
-//         res.send(result);
-//       });
-//     } else {
-//       // next(err);
-//       res.status(400).send({ err: 'err' });
-//     }
-//   });
-// });

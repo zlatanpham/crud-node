@@ -11,14 +11,17 @@ var InventorySchema = new mongoose.Schema({
   shipPaid: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
-  products: [
-    {
-      name: String,
-      sku: String,
-      cost: String,
-      stock: [{ quantity: Number, location: String }],
-    },
-  ],
+  products: {
+    type: [
+      {
+        name: String,
+        sku: String,
+        cost: String,
+        stock: [{ quantity: Number, location: String }],
+      },
+    ],
+    default: [],
+  },
 });
 
 module.exports = mongoose.model('Inventory', InventorySchema);
