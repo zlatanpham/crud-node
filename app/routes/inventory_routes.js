@@ -35,6 +35,45 @@ router.post('/', (req, res, next) => {
   });
 });
 
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    desc: yup.string().required(),
+    memo: yup.string().required(),
+    vendor: yup.string().required(),
+    paidBy: yup.string().required(),
+    products: yup.array(
+      yup.object().shape({
+        name: yup.string().required(),
+        sku: yup.string().required(),
+        cost: yup.number().required(),
+        stock: yup.array(
+          yup.object().shape({
+            quantity: yup.number().required(),
+            location: yup.string().required(),
+          }),
+        ),
+      }),
+    ),
+  });
+  schema.isValid(req.body).then(valid => {
+    if (valid) {
+      Inventory.findOneAndUpdate(
+        { _id: id },
+        { ...req.body },
+        (err, result) => {
+          if (err) next(err);
+          res.json(result);
+        },
+      );
+    } else {
+      // next(err);
+      res.status(400).send({ err: 'err' });
+    }
+  });
+});
+
 router.delete('/:id', (req, res, next) => {
   const { id } = req.params;
   console.log(id);
